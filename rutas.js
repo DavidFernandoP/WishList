@@ -65,22 +65,10 @@ routes.get('/actualizar', (req, res) => {
             if (err) return res.send(err);
 
             const idproducto_vector = rows.map((row) => row.idproducto);
-
-            const apiUrls = [
-                'https://cards.thenexusbattles2.cloud/api/cartas/?size=1000&page=1&coleccion=Armas&onlyActives=true',
-                'https://cards.thenexusbattles2.cloud/api/cartas/?size=1000&page=1&coleccion=Heroes&onlyActives=true',
-                'https://cards.thenexusbattles2.cloud/api/cartas/?size=1000&page=1&coleccion=Armaduras&onlyActives=true',
-                'https://cards.thenexusbattles2.cloud/api/cartas/?size=1000&page=1&coleccion=Epicas&onlyActives=true',
-                'https://cards.thenexusbattles2.cloud/api/cartas/?size=1000&page=1&coleccion=Items&onlyActives=true',
-            ];
-
-            const apiPromises = apiUrls.map(apiUrl => axios.get(apiUrl).then(response => response.data));
-
-            Promise.all(apiPromises)
-                .then(apiResponses => {
-                    const _id_vector = apiResponses
-                        .map(apiResponse => apiResponse.map(item => item._id))
-                        .flat();
+            axios.get('https://cards.thenexusbattles2.cloud/api/cartas/?size=1000&page=1&coleccion=All&onlyActives=true')
+                .then((apiResponse) => {
+                    const apiData = apiResponse.data;
+                    const _id_vector = apiData.map((item) => item._id);
 
                     const valoresAEliminar = idproducto_vector.filter(id => !_id_vector.includes(id));
 
@@ -100,8 +88,8 @@ routes.get('/actualizar', (req, res) => {
                     });
                 })
                 .catch((error) => {
-                    console.error('Error al consumir las APIs:', error);
-                    res.status(500).json({ error: 'Error al consumir las APIs' });
+                    console.error('Error al consumir la API:', error);
+                    res.status(500).json({ error: 'Error al consumir la API' });
                 });
         });
     });

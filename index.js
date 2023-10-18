@@ -1,6 +1,7 @@
 const express = require('express')
 const mysql = require('mysql2')
 const myconn = require('express-myconnection')
+const cors = require('cors')
 
 const routes = require('./rutas')
 
@@ -13,7 +14,7 @@ const dbOptions = {
     password: '123456',
     database: 'lista'
 }
-
+app.use(cors())
 app.use(myconn(mysql, dbOptions, 'single'))
 app.use(express.json())
 

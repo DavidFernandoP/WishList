@@ -30,17 +30,17 @@ routes.post('/lista/insertar', (req, res) => {
     })
 })
 
-routes.delete('/lista/eliminar/:idproducto', (req, res) => {
+routes.delete('/lista/eliminar/:idcliente/:idproducto', (req, res) => {
     req.getConnection((err, conn) => {
-        if(err) return res.send(err)
+        if(err) return res.send(err);
 
-        conn.query('DELETE FROM productos WHERE idproducto = ?', [req.params.idproducto], (err, rows) => {
-            if(err) return res.send(err)
+        conn.query('DELETE FROM productos WHERE idcliente = ? AND idproducto = ?', [req.params.idcliente, req.params.idproducto], (err, rows) => {
+            if(err) return res.send(err);
 
-            res.send('producto eliminado')
-        })
-    })
-})
+            res.send('Producto eliminado');
+        });
+    });
+});
 
 routes.get('/lista/:idcliente', (req, res) => {
     const idcliente = req.params.idcliente;
